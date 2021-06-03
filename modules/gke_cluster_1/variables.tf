@@ -52,6 +52,12 @@ variable "cluster_location" {
   description = "GKE cluster location"
 }
 
+variable "cluster_region" {
+  type        = string
+  default     = ""
+  description = "GKE cluster region"
+}
+
 variable "cluster_type" {
   type        = string
   default     = ""
@@ -62,6 +68,36 @@ variable "cluster_name" {
   type        = string
   default     = ""
   description = "GKE cluster name"
+}
+
+variable "cluster_autoscaling" {
+  type        = string
+  default     = "false"
+  description = "Whether we need or not cluster_autoscaling feature"
+}
+
+variable "cpu_min" {
+  type        = number
+  default = 0
+  description = "cpu_min"
+}
+
+variable "cpu_max" {
+  type        = number
+  default = 0
+  description = "cpu_max"
+}
+
+variable "memory_min" {
+  type        = number
+  default = 0
+  description = "memory_min"
+}
+
+variable "memory_max" {
+  type        = number
+  default = 0
+  description = "memory_max"
 }
 
 

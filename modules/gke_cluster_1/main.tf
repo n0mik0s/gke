@@ -39,13 +39,14 @@ resource "google_compute_network" "network" {
   project = var.gcp_project_id
   name = "${var.cluster_name}-net"
   auto_create_subnetworks = false
+  routing_mode = "GLOBAL"
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
   project = var.gcp_project_id
   name = "${var.cluster_name}-subnet"
   ip_cidr_range = var.nodes_ip_cidr_range
-  region = local.gke_cluster_is_regional ? var.cluster_location : ""
+  region = var.cluster_region
 
   network = google_compute_network.network.id
   secondary_ip_range {
@@ -56,6 +57,16 @@ resource "google_compute_subnetwork" "subnetwork" {
   secondary_ip_range {
     range_name = "pod-ranges"
     ip_cidr_range = var.pods_ip_cidr_range
+  }
+}
+
+resource "google_compute_firewall" "default" {
+  project = var.gcp_project_id
+  name    = "${var.cluster_name}-allow-icmp"
+  network = google_compute_network.network.name
+
+  allow {
+    protocol = "icmp"
   }
 }
 
@@ -72,10 +83,6 @@ resource "google_container_cluster" "cluster" {
     services_secondary_range_name = google_compute_subnetwork.subnetwork.secondary_ip_range.1.range_name
   }
 
-  cluster_autoscaling {
-    enabled = false
-  }
-
   dynamic "workload_identity_config" {
     for_each = var.workload_identity_enabled ? [1] : []
     content {
@@ -83,14 +90,37 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
+  cluster_autoscaling {
+    enabled = var.cluster_autoscaling
+
+    dynamic "resource_limits" {
+      for_each = var.cluster_autoscaling ? [1] : []
+      content {
+        resource_type = "memory"
+        minimum       = var.memory_min
+        maximum       = var.memory_max
+
+      }
+    }
+
+    dynamic "resource_limits" {
+      for_each = var.cluster_autoscaling ? [1] : []
+      content {
+        resource_type = "cpu"
+        minimum       = var.cpu_min
+        maximum       = var.cpu_max
+      }
+    }
+  }
+
   remove_default_node_pool = true
   initial_node_count = var.initial_node_count
-  default_max_pods_per_node = 8
+  default_max_pods_per_node = 20
 }
 
 resource "google_container_node_pool" "cluster_node_pool" {
   project = var.gcp_project_id
-  name = "${var.cluster_name}-node_pool"
+  name = "${var.cluster_name}-node-pool"
   location = var.cluster_location
   cluster = google_container_cluster.cluster.name
   node_count = var.initial_node_count

@@ -1,7 +1,13 @@
 ping_cluster_1 = {
     gcp_project_id = "telus-315414"
     cluster_type = "zonal"
+    cluster_autoscaling = "true"
+    cpu_min = "1"
+    cpu_max = "3"
+    memory_min = "2"
+    memory_max = "6"
     cluster_location = "us-west1-a"
+    cluster_region = "us-west1"
     cluster_name = "ping-cluster-1"
     gcp_and_k8s_sa_names = "ping-cluster-1"
     k8s_namespace = "test"
@@ -11,14 +17,16 @@ ping_cluster_1 = {
     pods_ip_cidr_range = "192.168.1.0/24"
     svcs_ip_cidr_range = "192.168.3.0/24"
     machine_type = "n1-standard-1"
-    initial_node_count = "1"
+    initial_node_count = "3"
     workload_identity_enabled = "true"
 }
 
 ping_cluster_2 = {
     gcp_project_id = "telus-315414"
-    cluster_type = "regional"
-    cluster_location = "northamerica-northeast1"
+    cluster_type = "zonal"
+    cluster_autoscaling = "false"
+    cluster_location = "northamerica-northeast1-a"
+    cluster_region = "northamerica-northeast1"
     cluster_name = "ping-cluster-2"
     gcp_and_k8s_sa_names = "ping-cluster-2"
     k8s_namespace = "test"
@@ -28,6 +36,6 @@ ping_cluster_2 = {
     pods_ip_cidr_range = "192.168.2.0/24"
     svcs_ip_cidr_range = "192.168.4.0/24"
     machine_type = "n1-standard-1"
-    initial_node_count = "1"
+    initial_node_count = "3"
     workload_identity_enabled = "true"
 }
