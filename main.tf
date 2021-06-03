@@ -1,42 +1,53 @@
-data "google_client_config" "default" {}
+module "gke_cluster_1" {
+  source = "./modules/gke_cluster_1"
 
-module "network" {
-  source = "./modules/network"
+  nodes_ip_cidr_range = var.ping_cluster_1.nodes_ip_cidr_range
+  pods_ip_cidr_range = var.ping_cluster_1.pods_ip_cidr_range
+  svcs_ip_cidr_range = var.ping_cluster_1.svcs_ip_cidr_range
 
-  region = var.gcp_region
-  nodes_ip_cidr_range = var.nodes_ip_cidr_range
-  pods_ip_cidr_range = var.pods_ip_cidr_range
-  svcs_ip_cidr_range = var.svcs_ip_cidr_range
+  cluster_location = var.ping_cluster_1.cluster_location
+  cluster_type = var.ping_cluster_1.cluster_type
+  cluster_name = var.ping_cluster_1.cluster_name
+
+  gcp_project_id = var.ping_cluster_1.gcp_project_id
+
+  workload_identity_enabled = var.ping_cluster_1.workload_identity_enabled
+  initial_node_count = var.ping_cluster_1.initial_node_count
+
+  k8s_namespace_to_create = split(",", var.ping_cluster_1.k8s_namespace_to_create)
+
+  gcp_and_k8s_sa_names = var.ping_cluster_1.gcp_and_k8s_sa_names
+  k8s_namespace = var.ping_cluster_1.k8s_namespace
+  roles = split(",", var.ping_cluster_1.roles)
 }
 
-module "gke" {
-  source = "./modules/gke"
+module "gke_cluster_2" {
+  source = "./modules/gke_cluster_2"
 
-  gcp_region = var.gcp_region
-  gcp_project_id = var.gcp_project_id
+  nodes_ip_cidr_range = var.ping_cluster_2.nodes_ip_cidr_range
+  pods_ip_cidr_range = var.ping_cluster_2.pods_ip_cidr_range
+  svcs_ip_cidr_range = var.ping_cluster_2.svcs_ip_cidr_range
 
-  workload_identity_enabled = var.workload_identity_enabled
-  initial_node_count = var.initial_node_count
-  
-  network = module.network.network
-  subnetwork = module.network.subnetwork
-  cluster_secondary_range_name  = module.network.cluster_secondary_range_name
-  services_secondary_range_name = module.network.services_secondary_range_name
+  cluster_location = var.ping_cluster_2.cluster_location
+  cluster_type = var.ping_cluster_2.cluster_type
+  cluster_name = var.ping_cluster_2.cluster_name
 
-  k8s_namespace_to_create = var.k8s_namespace_to_create
+  gcp_project_id = var.ping_cluster_2.gcp_project_id
+
+  workload_identity_enabled = var.ping_cluster_2.workload_identity_enabled
+  initial_node_count = var.ping_cluster_2.initial_node_count
+
+  k8s_namespace_to_create = split(",", var.ping_cluster_2.k8s_namespace_to_create)
+
+  gcp_and_k8s_sa_names = var.ping_cluster_2.gcp_and_k8s_sa_names
+  k8s_namespace = var.ping_cluster_2.k8s_namespace
+  roles = split(",", var.ping_cluster_2.roles)
 }
 
-module "workload_identity" {
-  for_each = var.workload_identity_map
+module "peering" {
+  source = "./modules/network-peering"
 
-  source = "./modules/workload-identity"
-
-  endpoint = module.gke.endpoint
-  cluster_ca_certificate = module.gke.cluster_ca_certificate
-  
-  gcp_and_k8s_sa_names = each.value.gcp_and_k8s_sa_names
-  k8s_namespace = each.value.k8s_namespace
-  gcp_project_id = var.gcp_project_id
-  roles = split(",", each.value.roles)
-  gcp_location = var.gcp_region
+  prefix        = "telus"
+  local_network = module.gke_cluster_1.network
+  peer_network  = module.gke_cluster_2.network
 }
