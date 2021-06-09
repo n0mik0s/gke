@@ -1,41 +1,53 @@
-ping_cluster_1 = {
+cluster = {
     gcp_project_id = "telus-315414"
-    cluster_type = "zonal"
-    cluster_autoscaling = "true"
-    cpu_min = "1"
-    cpu_max = "3"
-    memory_min = "2"
-    memory_max = "6"
-    cluster_location = "us-west1-a"
-    cluster_region = "us-west1"
-    cluster_name = "ping-cluster-1"
-    gcp_and_k8s_sa_names = "ping-cluster-1"
-    k8s_namespace = "test"
-    k8s_namespace_to_create = "test"
-    roles = "roles/storage.admin,roles/compute.admin"
-    nodes_ip_cidr_range = "10.1.0.0/16"
-    pods_ip_cidr_range = "192.168.1.0/24"
-    svcs_ip_cidr_range = "192.168.3.0/24"
+    cluster_type = "regional"
+    cluster_autoscaling = true
+    cluster_name = "ping-idm"
+    cpu_min = 3
+    cpu_max = 6
+    memory_min = 8
+    memory_max = 24
+    min_node_count = 1
+    max_node_count = 2
+    gcp_region = "us-west1"
+    cluster_location = "us-west1"
+    subnetwork_name = "gke"
+    primary_ip_cidr_range = "10.1.1.0/24"
+    master_ipv4_cidr_block = "172.16.0.0/28"
+    secondary_ip_range = [
+        {
+            "ip_cidr_range": "192.168.10.0/24"
+            "range_name": "services-range"
+        },
+        {
+            "ip_cidr_range": "192.168.11.0/24"
+            "range_name": "pod-ranges"
+        }
+    ]
     machine_type = "n1-standard-1"
-    initial_node_count = "3"
-    workload_identity_enabled = "true"
+    initial_node_count = 1
+    default_max_pods_per_node = 30
+    workload_identity_enabled = true
+    k8s_namespaces = ["test"]
+    istio_config = true
 }
 
-ping_cluster_2 = {
-    gcp_project_id = "telus-315414"
-    cluster_type = "zonal"
-    cluster_autoscaling = "false"
-    cluster_location = "northamerica-northeast1-a"
-    cluster_region = "northamerica-northeast1"
-    cluster_name = "ping-cluster-2"
-    gcp_and_k8s_sa_names = "ping-cluster-2"
-    k8s_namespace = "test"
-    k8s_namespace_to_create = "test"
-    roles = "roles/storage.admin,roles/compute.admin"
-    nodes_ip_cidr_range = "10.2.0.0/16"
-    pods_ip_cidr_range = "192.168.2.0/24"
-    svcs_ip_cidr_range = "192.168.4.0/24"
+workload_identity_list = {
+    "ping-idm-federate" = {
+        gcp_and_k8s_sa_names = "ping-idm-federate"
+        k8s_namespace = "test"
+        roles = ["roles/storage.admin", "roles/compute.admin"]
+    }
+}
+
+bastion = {
+    gcp_zone = "us-west1-a"
+    primary_ip_cidr_range = "10.2.1.0/24"
     machine_type = "n1-standard-1"
-    initial_node_count = "3"
-    workload_identity_enabled = "true"
+}
+
+ping = {
+    helm_enabled = true
+    helm_repository = "https://helm.pingidentity.com/"
+    helm_chart = "ping-devops"
 }

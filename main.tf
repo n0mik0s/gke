@@ -1,64 +1,79 @@
-module "gke_cluster_1" {
-  source = "./modules/gke_cluster_1"
+data "google_client_config" "default" {}
 
-  nodes_ip_cidr_range = var.ping_cluster_1.nodes_ip_cidr_range
-  pods_ip_cidr_range = var.ping_cluster_1.pods_ip_cidr_range
-  svcs_ip_cidr_range = var.ping_cluster_1.svcs_ip_cidr_range
+module "network" {
+  source = "./modules/network"
 
-  cluster_location = var.ping_cluster_1.cluster_location
-  cluster_region = var.ping_cluster_1.cluster_region
-  cluster_type = var.ping_cluster_1.cluster_type
-  cluster_name = var.ping_cluster_1.cluster_name
-  cluster_autoscaling = tobool(var.ping_cluster_1.cluster_autoscaling)
-  cpu_min = tonumber(var.ping_cluster_1.cpu_min)
-  cpu_max = tonumber(var.ping_cluster_1.cpu_max)
-  memory_min = tonumber(var.ping_cluster_1.memory_min)
-  memory_max = tonumber(var.ping_cluster_1.memory_max)
-
-  gcp_project_id = var.ping_cluster_1.gcp_project_id
-
-  workload_identity_enabled = tobool(var.ping_cluster_1.workload_identity_enabled)
-  initial_node_count = var.ping_cluster_1.initial_node_count
-
-  k8s_namespace_to_create = split(",", var.ping_cluster_1.k8s_namespace_to_create)
-
-  gcp_and_k8s_sa_names = var.ping_cluster_1.gcp_and_k8s_sa_names
-  k8s_namespace = var.ping_cluster_1.k8s_namespace
-  roles = split(",", var.ping_cluster_1.roles)
+  gcp_project_id = var.cluster.gcp_project_id
+  gcp_region = var.cluster.gcp_region
+  network_name = "${var.cluster.cluster_name}-net"
+  ssh_destination_ranges = [var.bastion.primary_ip_cidr_range]
 }
 
-module "gke_cluster_2" {
-  source = "./modules/gke_cluster_2"
+module "gke" {
+  source = "./modules/gke"
 
-  nodes_ip_cidr_range = var.ping_cluster_2.nodes_ip_cidr_range
-  pods_ip_cidr_range = var.ping_cluster_2.pods_ip_cidr_range
-  svcs_ip_cidr_range = var.ping_cluster_2.svcs_ip_cidr_range
+  gcp_region = var.cluster.gcp_region
+  gcp_project_id = var.cluster.gcp_project_id
 
-  cluster_location = var.ping_cluster_2.cluster_location
-  cluster_region = var.ping_cluster_2.cluster_region
-  cluster_type = var.ping_cluster_2.cluster_type
-  cluster_name = var.ping_cluster_2.cluster_name
-  cluster_autoscaling = tobool(var.ping_cluster_2.cluster_autoscaling)
+  cluster_name = var.cluster.cluster_name
+  cluster_location = var.cluster.cluster_location
 
-  gcp_project_id = var.ping_cluster_2.gcp_project_id
+  network = module.network.network_id
+  primary_ip_cidr_range = var.cluster.primary_ip_cidr_range
+  secondary_ip_range = var.cluster.secondary_ip_range
+  master_ipv4_cidr_block = var.cluster.master_ipv4_cidr_block
+  bastion_cidr_block = var.bastion.primary_ip_cidr_range
 
-  workload_identity_enabled = tobool(var.ping_cluster_2.workload_identity_enabled)
-  initial_node_count = var.ping_cluster_2.initial_node_count
+  workload_identity_enabled = var.cluster.workload_identity_enabled
+  cluster_autoscaling = var.cluster.cluster_autoscaling
+  memory_min = var.cluster.memory_min
+  memory_max = var.cluster.memory_max
+  cpu_min = var.cluster.cpu_min
+  cpu_max = var.cluster.cpu_max
+  initial_node_count = var.cluster.initial_node_count
+  max_node_count = var.cluster.max_node_count
+  min_node_count = var.cluster.min_node_count
+  default_max_pods_per_node = var.cluster.default_max_pods_per_node
+  machine_type = var.cluster.machine_type
+  istio_config = var.cluster.istio_config
 
-  k8s_namespace_to_create = split(",", var.ping_cluster_2.k8s_namespace_to_create)
-
-  gcp_and_k8s_sa_names = var.ping_cluster_2.gcp_and_k8s_sa_names
-  k8s_namespace = var.ping_cluster_2.k8s_namespace
-  roles = split(",", var.ping_cluster_2.roles)
+  k8s_namespaces = var.cluster.k8s_namespaces
 }
 
-module "peering" {
-  source = "./modules/network-peering"
+module "workload_identity" {
+  for_each = var.workload_identity_list
 
-  prefix        = "telus"
-  export_local_custom_routes = true
-  export_peer_custom_routes = true
-  export_peer_subnet_routes_with_public_ip = true
-  local_network = module.gke_cluster_1.network
-  peer_network  = module.gke_cluster_2.network
+  source = "./modules/workload_identity"
+
+  endpoint = module.gke.endpoint
+  cluster_ca_certificate = module.gke.cluster_ca_certificate
+
+  gcp_and_k8s_sa_names = each.value.gcp_and_k8s_sa_names
+  k8s_namespace = each.value.k8s_namespace
+  gcp_project_id = var.cluster.gcp_project_id
+  roles = each.value.roles
+  gcp_location = var.cluster.gcp_region
+}
+
+module "bastion" {
+  source = "./modules/bastion"
+  
+  gcp_project_id = var.cluster.gcp_project_id
+  gcp_region = var.cluster.gcp_region
+  gcp_zone = var.bastion.gcp_zone
+
+  primary_ip_cidr_range = var.bastion.primary_ip_cidr_range
+  network = module.network.network_id
+
+  machine_type = var.bastion.machine_type
+}
+
+module "ping" {
+  source = "./modules/ping"
+  count  = var.ping.helm_enabled ? 1 : 0
+
+  helm_repository = var.ping.helm_repository
+  helm_chart = var.ping.helm_chart
+
+  depends_on = [module.workload_identity]
 }
