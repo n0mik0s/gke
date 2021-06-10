@@ -37,4 +37,4 @@ terraform.rc
 .terraform.lock.hcl
 
 # Ignore config dirs
-**/config/*
+**/config/**
