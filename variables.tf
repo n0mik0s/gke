@@ -79,11 +79,19 @@ variable "ping" {
     helm_enabled = bool
     helm_repository = string
     helm_chart = string
+    ping_devops_user = string
+    ping_devops_key_bd = string
+    ping_devops_user_bd = string
+    namespace = string
   })
   default = {
     helm_enabled = false
     helm_repository = ""
     helm_chart = ""
+    ping_devops_user = ""
+    ping_devops_key_bd = ""
+    ping_devops_user_bd = ""
+    namespace = ""
   }
   description = "The list of items for helm configuration"
 }

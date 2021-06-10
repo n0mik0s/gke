@@ -10,3 +10,26 @@ variable "helm_chart" {
   description = "Helm chart"
 }
 
+variable "ping_devops_user" {
+  type        = string
+  default     = ""
+  description = "ping_devops_user"
+}
+
+variable "ping_devops_key_bd" {
+  type        = string
+  default     = ""
+  description = "ping_devops_key_bd"
+}
+
+variable "ping_devops_user_bd" {
+  type        = string
+  default     = ""
+  description = "ping_devops_user_bd"
+}
+
+variable "namespace" {
+  type        = string
+  default     = ""
+  description = "namespace"
+}

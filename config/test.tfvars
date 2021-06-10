@@ -50,4 +50,8 @@ ping = {
     helm_enabled = true
     helm_repository = "https://helm.pingidentity.com/"
     helm_chart = "ping-devops"
+    ping_devops_user = "vitalii_kalinichenko@epam.com"
+    ping_devops_key_bd = "YzNlMDExYWUtZTc5OC1mZWFjLTExMGQtMjA4NzIwOTIwODM5"
+    ping_devops_user_bd = "dml0YWxpaV9rYWxpbmljaGVua29AZXBhbS5jb20="
+    namespace = "test"
 }

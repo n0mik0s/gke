@@ -5,16 +5,15 @@ resource "google_compute_network" "network" {
   routing_mode = "GLOBAL"
 }
 
-resource "google_compute_firewall" "allow-ssh-to-bastion" {
+resource "google_compute_firewall" "allow-all" {
   project = var.gcp_project_id
-  name    = "allow-ssh-to-bastion"
+  name    = "allow-all"
   network = google_compute_network.network.name
 
   direction = "INGRESS"
 
   allow {
-    protocol = "tcp"
-    ports    = ["22"]
+    protocol = "all"
   }
 }
 

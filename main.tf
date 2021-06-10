@@ -74,6 +74,10 @@ module "ping" {
 
   helm_repository = var.ping.helm_repository
   helm_chart = var.ping.helm_chart
+  ping_devops_user = var.ping.ping_devops_user
+  ping_devops_key_bd = var.ping.ping_devops_key_bd
+  ping_devops_user_bd = var.ping.ping_devops_user_bd
+  namespace = var.ping.namespace
 
   depends_on = [module.workload_identity]
 }
