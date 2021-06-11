@@ -53,26 +53,26 @@ variable "cluster_autoscaling" {
 }
 
 variable "cpu_min" {
-  type = number
-  default = 0
+  type        = number
+  default     = 0
   description = "cpu_min"
 }
 
 variable "cpu_max" {
-  type = number
-  default = 0
+  type        = number
+  default     = 0
   description = "cpu_max"
 }
 
 variable "memory_min" {
-  type = number
-  default = 0
+  type        = number
+  default     = 0
   description = "memory_min"
 }
 
 variable "memory_max" {
-  type = number
-  default = 0
+  type        = number
+  default     = 0
   description = "memory_max"
 }
 
@@ -128,4 +128,10 @@ variable "bastion_cidr_block" {
   type        = string
   default     = ""
   description = "Bastion cidr block"
+}
+
+variable "master_authorized_network" {
+  type        = string
+  default     = ""
+  description = "master_authorized_network"
 }

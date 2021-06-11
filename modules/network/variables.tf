@@ -4,16 +4,10 @@ variable "gcp_project_id" {
   description = "GCP project ID"
 }
 
-variable "network_name" {
+variable "cluster_name" {
   type        = string
   default     = ""
-  description = "Network name"
-}
-
-variable "ssh_destination_ranges" {
-  type        = set(string)
-  default     = []
-  description = "ssh_destination_ranges"
+  description = "Cluster name"
 }
 
 variable "gcp_region" {

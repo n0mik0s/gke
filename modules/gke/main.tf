@@ -2,25 +2,29 @@
 This module intended to create GKE cluster with non-default node pool.
 In addition new namespaces could be created in the newly created cluster.
 */
+locals {
+  gke_nodes_sa = "${var.cluster_name}-gke-nodes-sa"
+  subnetwork   = "${var.cluster_name}-gke-subnet"
+}
 
 
 resource "google_service_account" "gke_nodes_sa" {
-  project = var.gcp_project_id
-  account_id   = "gke-nodes-sa"
+  project      = var.gcp_project_id
+  account_id   = local.gke_nodes_sa
   display_name = "Service Account that belongs to the GKE node pool"
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
-  name = "subnetwork-gke"
+  name          = local.subnetwork
   ip_cidr_range = var.primary_ip_cidr_range
-  project = var.gcp_project_id
-  region = var.gcp_region
-  network = var.network
+  project       = var.gcp_project_id
+  region        = var.gcp_region
+  network       = var.network
 
   dynamic "secondary_ip_range" {
     for_each = var.secondary_ip_range
     content {
-      range_name = secondary_ip_range.value["range_name"]
+      range_name    = secondary_ip_range.value["range_name"]
       ip_cidr_range = secondary_ip_range.value["ip_cidr_range"]
     }
   }
@@ -29,15 +33,15 @@ resource "google_compute_subnetwork" "subnetwork" {
 resource "google_container_cluster" "cluster" {
   provider = google-beta
 
-  project = var.gcp_project_id
-  name = var.cluster_name
+  project  = var.gcp_project_id
+  name     = var.cluster_name
   location = var.cluster_location
 
-  network = var.network
+  network    = var.network
   subnetwork = google_compute_subnetwork.subnetwork.id
 
   ip_allocation_policy {
-    cluster_secondary_range_name = google_compute_subnetwork.subnetwork.secondary_ip_range.0.range_name
+    cluster_secondary_range_name  = google_compute_subnetwork.subnetwork.secondary_ip_range.0.range_name
     services_secondary_range_name = google_compute_subnetwork.subnetwork.secondary_ip_range.1.range_name
   }
 
@@ -66,15 +70,15 @@ resource "google_container_cluster" "cluster" {
   }
 
   private_cluster_config {
-    enable_private_nodes = true
+    enable_private_nodes    = true
     enable_private_endpoint = false
-    master_ipv4_cidr_block = var.master_ipv4_cidr_block
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "0.0.0.0/0"
-      display_name = "master_authorized_networks_config"
+      cidr_block   = var.master_authorized_network
+      display_name = "master authorized networks config"
     }
   }
 
@@ -85,8 +89,8 @@ resource "google_container_cluster" "cluster" {
       for_each = var.cluster_autoscaling ? [1] : []
       content {
         resource_type = "memory"
-        minimum = var.memory_min
-        maximum = var.memory_max
+        minimum       = var.memory_min
+        maximum       = var.memory_max
 
       }
     }
@@ -95,22 +99,22 @@ resource "google_container_cluster" "cluster" {
       for_each = var.cluster_autoscaling ? [1] : []
       content {
         resource_type = "cpu"
-        minimum = var.cpu_min
-        maximum = var.cpu_max
+        minimum       = var.cpu_min
+        maximum       = var.cpu_max
       }
     }
   }
 
-  remove_default_node_pool = true
-  initial_node_count = var.initial_node_count
+  remove_default_node_pool  = true
+  initial_node_count        = var.initial_node_count
   default_max_pods_per_node = var.default_max_pods_per_node
 }
 
 resource "google_container_node_pool" "cluster_node_pool" {
-  project = var.gcp_project_id
-  name = "${var.cluster_name}-node-pool"
-  location = var.cluster_location
-  cluster = google_container_cluster.cluster.name
+  project    = var.gcp_project_id
+  name       = "${var.cluster_name}-node-pool"
+  location   = var.cluster_location
+  cluster    = google_container_cluster.cluster.name
   node_count = var.initial_node_count
 
   autoscaling {
@@ -119,7 +123,7 @@ resource "google_container_node_pool" "cluster_node_pool" {
   }
 
   node_config {
-    preemptible = true
+    preemptible  = false
     machine_type = var.machine_type
     disk_size_gb = 30
 

@@ -33,3 +33,9 @@ variable "gcp_zone" {
   default     = ""
   description = "gcp_zone"
 }
+
+variable "cluster_name" {
+  type        = string
+  default     = ""
+  description = "cluster_name"
+}

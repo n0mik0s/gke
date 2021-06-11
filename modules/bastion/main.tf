@@ -1,6 +1,13 @@
+locals {
+  bastion_sa            = "${var.cluster_name}-bastion-sa"
+  subnetwork_name       = "${var.cluster_name}-bastion-subnet"
+  compute_instance_name = "${var.cluster_name}-bastion-host"
+}
+
+
 resource "google_service_account" "bastion_sa" {
-  project = var.gcp_project_id
-  account_id = "bastion-sa"
+  project      = var.gcp_project_id
+  account_id   = local.bastion_sa
   display_name = "Bastion host Service Account"
 }
 
@@ -13,18 +20,18 @@ resource "google_project_iam_member" "bastion_sa_iam" {
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
-  name = "subnetwork-bastion"
+  name          = local.subnetwork_name
   ip_cidr_range = var.primary_ip_cidr_range
-  project = var.gcp_project_id
-  region = var.gcp_region
-  network = var.network
+  project       = var.gcp_project_id
+  region        = var.gcp_region
+  network       = var.network
 }
 
 resource "google_compute_instance" "bastion" {
-  project = var.gcp_project_id
-  name = "bastion-host"
+  project      = var.gcp_project_id
+  name         = local.compute_instance_name
   machine_type = var.machine_type
-  zone = var.gcp_zone
+  zone         = var.gcp_zone
 
   tags = ["bastion"]
 
@@ -42,10 +49,10 @@ resource "google_compute_instance" "bastion" {
     subnetwork = google_compute_subnetwork.subnetwork.self_link
   }
 
-  metadata_startup_script = "${file("./scripts/bastion_startup_script.sh")}"
+  metadata_startup_script = file("./scripts/bastion_startup_script.sh")
 
   service_account {
-    email = google_service_account.bastion_sa.email
+    email  = google_service_account.bastion_sa.email
     scopes = ["cloud-platform"]
   }
 }
