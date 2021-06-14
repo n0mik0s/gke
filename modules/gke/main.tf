@@ -110,10 +110,8 @@ resource "google_container_cluster" "cluster" {
   default_max_pods_per_node = var.default_max_pods_per_node
 
   maintenance_policy {
-    recurring_window {
-      start_time = "2021-06-15T01:00:00Z"
-      end_time = "2019-06-15T03:45:00Z"
-      recurrence = "FREQ=WEEKLY;BYDAY=TU,TH"
+    daily_maintenance_window {
+      start_time = "01:00"
     }
   }
 }

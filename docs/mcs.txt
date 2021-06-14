@@ -26,6 +26,18 @@ gcloud services enable multiclusterservicediscovery.googleapis.com \
 gcloud alpha container hub multi-cluster-services enable \
     --project PROJECT_ID
 
+    https://cloud.google.com/anthos/multicluster-management/connect/prerequisites#gke-cross-project
+    It could be that for the next steps you would need to issue next commands:
+    GKE_PROJECT_ID=PROJECT_ID
+    HUB_PROJECT_ID=PROJECT_ID
+    HUB_PROJECT_NUMBER=$(gcloud projects describe "${HUB_PROJECT_ID}" --format "value(projectNumber)")
+    gcloud projects add-iam-policy-binding "${HUB_PROJECT_ID}" \
+    --member "serviceAccount:service-${HUB_PROJECT_NUMBER}@gcp-sa-gkehub.iam.gserviceaccount.com" \
+    --role roles/gkehub.serviceAgent
+    gcloud projects add-iam-policy-binding "${GKE_PROJECT_ID}" \
+    --member "serviceAccount:service-${HUB_PROJECT_NUMBER}@gcp-sa-gkehub.iam.gserviceaccount.com" \
+    --role roles/gkehub.serviceAgent
+
 gcloud container hub memberships register na-northeast1 \
    --gke-cluster northamerica-northeast1/na-northeast1 \
    --enable-workload-identity
