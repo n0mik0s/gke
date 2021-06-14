@@ -108,6 +108,17 @@ resource "google_container_cluster" "cluster" {
   remove_default_node_pool  = true
   initial_node_count        = var.initial_node_count
   default_max_pods_per_node = var.default_max_pods_per_node
+
+  maintenance_policy {
+    daily_maintenance_window {
+      start_time = "04:00"
+    }
+    recurring_window {
+      start_time = "2021-06-15T01:00:00Z"
+      end_time = "2019-06-15T03:45:00Z"
+      recurrence = "FREQ=WEEKLY;BYDAY=TU,TH"
+    }
+  }
 }
 
 resource "google_container_node_pool" "cluster_node_pool" {
