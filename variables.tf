@@ -97,3 +97,9 @@ variable "ping" {
   }
   description = "The list of items for helm configuration"
 }
+
+variable "bucket_name" {
+  type        = string
+  default     = ""
+  description = "Backend bucket_name"
+}
