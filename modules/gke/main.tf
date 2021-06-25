@@ -3,8 +3,8 @@ This module intended to create GKE cluster with non-default node pool.
 In addition new namespaces could be created in the newly created cluster.
 */
 locals {
-  gke_nodes_sa = "${var.cluster_name}-gke-nodes-sa"
-  subnetwork   = "${var.cluster_name}-gke-subnet"
+  gke_nodes_sa = "${var.cluster_name}-nodes-sa"
+  subnetwork   = "${var.cluster_name}-subnet"
 }
 
 
@@ -14,19 +14,32 @@ resource "google_service_account" "gke_nodes_sa" {
   display_name = "Service Account that belongs to the GKE node pool"
 }
 
+resource "google_project_iam_member" "gke_nodes_sa_bindings" {
+  for_each = toset([
+    "roles/storage.objectViewer",
+    "roles/source.reader"
+  ])
+
+  project = var.gcp_project_id
+  role    = each.value
+  member  = "serviceAccount:${google_service_account.gke_nodes_sa.email}"
+}
+
 resource "google_compute_subnetwork" "subnetwork" {
   name          = local.subnetwork
   ip_cidr_range = var.primary_ip_cidr_range
   project       = var.gcp_project_id
-  region        = var.gcp_region
+  region        = var.cluster_region
   network       = var.network
 
-  dynamic "secondary_ip_range" {
-    for_each = var.secondary_ip_range
-    content {
-      range_name    = secondary_ip_range.value["range_name"]
-      ip_cidr_range = secondary_ip_range.value["ip_cidr_range"]
-    }
+  secondary_ip_range {
+    range_name    = "services-range"
+    ip_cidr_range = var.secondary_ip_range_svc
+  }
+
+  secondary_ip_range {
+    range_name    = "pod-ranges"
+    ip_cidr_range = var.secondary_ip_range_pods
   }
 }
 
@@ -144,19 +157,8 @@ resource "google_container_node_pool" "cluster_node_pool" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring"
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/source.full_control"
     ]
-  }
-}
-
-resource "kubernetes_namespace" "k8s_namespace" {
-  for_each = var.k8s_namespaces
-
-  metadata {
-    labels = {
-      cluster = google_container_cluster.cluster.name
-    }
-
-    name = each.value
   }
 }

@@ -1,17 +1,17 @@
-variable "gcp_project_id" {
+variable gcp_project_id {
   type        = string
   default     = ""
-  description = "GCP project ID"
+  description = "gcp project id"
 }
 
-variable "cluster_name" {
-  type        = string
-  default     = ""
-  description = "Cluster name"
+variable gcp_regions {
+  type        = set(string)
+  default     = []
+  description = "Set of gcp regions for network module (Cloud Router and Cloud Nat configuration)"
 }
 
-variable "gcp_region" {
+variable network_name {
   type        = string
   default     = ""
-  description = "gcp_region"
+  description = "network_name"
 }

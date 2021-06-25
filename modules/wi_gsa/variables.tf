@@ -1,4 +1,4 @@
-variable "gcp_and_k8s_sa_names" {
+variable "name" {
   description = "Name for both service accounts. The GCP SA will be truncated to the first 30 chars if necessary."
   type        = string
 }
@@ -9,33 +9,33 @@ variable "cluster_name" {
   default     = ""
 }
 
-variable "gcp_location" {
+variable "location" {
   description = "Cluster location (region if regional cluster, zone if zonal cluster). Required if using existing KSA."
   type        = string
   default     = ""
 }
 
-variable "k8s_existing_sa_name" {
+variable "k8s_sa_name" {
   description = "Name for the existing Kubernetes service account"
   type        = string
   default     = null
 }
 
-variable "k8s_namespace" {
+variable "namespace" {
   description = "Namespace for k8s service account"
   default     = "default"
   type        = string
 }
 
-variable "gcp_project_id" {
+variable "project_id" {
   description = "GCP project ID"
   type        = string
 }
 
 variable "use_existing_k8s_sa" {
   description = "Use an existing kubernetes service account instead of creating one"
-  default     = "false"
-  type        = string
+  default     = false
+  type        = bool
 }
 
 variable "annotate_k8s_sa" {
@@ -56,14 +56,8 @@ variable "roles" {
   description = "(optional) A list of roles to be added to the created Service account"
 }
 
-variable "endpoint" {
+variable "k8s_given_name" {
+  description = "Name for the given Kubernetes service account"
   type        = string
-  default     = ""
-  description = "K8s endpoint"
-}
-
-variable "cluster_ca_certificate" {
-  type        = string
-  default     = ""
-  description = "K8s cluster_ca_certificate"
+  default     = null
 }
