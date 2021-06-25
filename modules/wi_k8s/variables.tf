@@ -36,15 +36,15 @@ variable "automount_service_account_token" {
   type        = bool
 }
 
-variable wi_set {
+variable "wi_set" {
   type = set(map(string))
   default = [{
-    name = null
-    namespace = null
-    roles = null
+    name                = null
+    namespace           = null
+    roles               = null
     use_existing_k8s_sa = "false"
-    annotate_k8s_sa = "false"
-    k8s_sa_name = null
+    annotate_k8s_sa     = "false"
+    k8s_sa_name         = null
   }]
   description = "The set of objects with all variables that should be set for WI processing"
 }

@@ -1,5 +1,5 @@
 resource "kubernetes_service_account" "main" {
-  for_each = {for wi in var.wi_set:  wi.name => wi if !tobool(wi.use_existing_k8s_sa)}
+  for_each = { for wi in var.wi_set : wi.name => wi if !tobool(wi.use_existing_k8s_sa) }
 
   automount_service_account_token = var.automount_service_account_token
 
@@ -13,7 +13,7 @@ resource "kubernetes_service_account" "main" {
 }
 
 module "annotate-sa" {
-  for_each = {for wi in var.wi_set: wi.name => wi if tobool(wi.use_existing_k8s_sa) && tobool(wi.annotate_k8s_sa)}
+  for_each = { for wi in var.wi_set : wi.name => wi if tobool(wi.use_existing_k8s_sa) && tobool(wi.annotate_k8s_sa) }
 
   source  = "terraform-google-modules/gcloud/google//modules/kubectl-wrapper"
   version = "~> 2.0.2"
