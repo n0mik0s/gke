@@ -21,3 +21,7 @@ output "cluster_name" {
 output "cluster_location" {
   value = google_container_cluster.cluster.location
 }
+
+output "instance_group_urls" {
+  value = google_container_node_pool.cluster_node_pool.instance_group_urls
+}

@@ -9,3 +9,9 @@ variable "cluster_name" {
   default     = ""
   description = "cluster_name"
 }
+
+variable "helm_namespace" {
+  type        = string
+  default     = ""
+  description = "helm_namespace"
+}

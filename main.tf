@@ -74,24 +74,28 @@ module "gke-2" {
 
 module "k8s-gke-1" {
   source = "./modules/k8s"
+  count  = var.k8s_enabled ? 1 : 0
 
   providers = {
     kubernetes = kubernetes.gke-1
   }
 
-  namespaces   = var.cluster_k8s_namespaces
-  cluster_name = module.gke-1.cluster_name
+  namespaces     = var.cluster_k8s_namespaces
+  helm_namespace = var.helm_namespace
+  cluster_name   = module.gke-1.cluster_name
 }
 
 module "k8s-gke-2" {
   source = "./modules/k8s"
+  count  = var.k8s_enabled ? 1 : 0
 
   providers = {
     kubernetes = kubernetes.gke-2
   }
 
-  namespaces   = var.cluster_k8s_namespaces
-  cluster_name = module.gke-2.cluster_name
+  namespaces     = var.cluster_k8s_namespaces
+  helm_namespace = var.helm_namespace
+  cluster_name   = module.gke-2.cluster_name
 }
 
 module "wi_k8s-gke-1" {
@@ -108,8 +112,7 @@ module "wi_k8s-gke-1" {
 }
 
 module "wi_gsa-gke-1" {
-  source = "./modules/wi_gsa"
-
+  source   = "./modules/wi_gsa"
   for_each = { for wi in var.wi_gke-1_set : wi.name => wi }
 
   name           = each.value.name
@@ -133,8 +136,7 @@ module "wi_k8s-gke-2" {
 }
 
 module "wi_gsa-gke-2" {
-  source = "./modules/wi_gsa"
-
+  source   = "./modules/wi_gsa"
   for_each = { for wi in var.wi_gke-2_set : wi.name => wi }
 
   name           = each.value.name
@@ -174,4 +176,54 @@ module "bastion-2" {
   network               = module.network.network_id
 
   machine_type = var.bastion_machine_type
+}
+
+module "lb" {
+  source = "./modules/lb"
+  count  = var.lb_enabled ? 1 : 0
+
+  lb_exposed_port = var.lb_exposed_port
+  lb_neg_name     = var.lb_neg_name
+  gcp_project_id  = var.gcp_project_id
+
+  instance_group_urls = flatten([
+    module.gke-1.instance_group_urls,
+    module.gke-2.instance_group_urls
+  ])
+}
+
+module "helm-gke-1" {
+  source = "./modules/helm"
+  count  = var.helm_enabled ? 1 : 0
+
+  providers = {
+    helm       = helm.gke-1
+    kubernetes = kubernetes.gke-1
+  }
+
+  helm_chart      = var.helm_chart
+  helm_namespace  = var.helm_namespace
+  helm_repository = var.helm_repository
+
+  ping_devops_user    = var.ping_devops_user
+  ping_devops_key_bd  = var.ping_devops_key_bd
+  ping_devops_user_bd = var.ping_devops_user_bd
+}
+
+module "helm-gke-2" {
+  source = "./modules/helm"
+  count  = var.helm_enabled ? 1 : 0
+
+  providers = {
+    helm       = helm.gke-2
+    kubernetes = kubernetes.gke-2
+  }
+
+  helm_chart      = var.helm_chart
+  helm_namespace  = var.helm_namespace
+  helm_repository = var.helm_repository
+
+  ping_devops_user    = var.ping_devops_user
+  ping_devops_key_bd  = var.ping_devops_key_bd
+  ping_devops_user_bd = var.ping_devops_user_bd
 }

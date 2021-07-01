@@ -232,6 +232,21 @@ variable "helm_namespace" {
   description = "helm_namespace"
 }
 
+variable "ping_devops_user" {
+  type        = string
+  description = "ping_devops_user"
+}
+
+variable "ping_devops_key_bd" {
+  type        = string
+  description = "ping_devops_key_bd"
+}
+
+variable "ping_devops_user_bd" {
+  type        = string
+  description = "ping_devops_user_bd"
+}
+
 variable "bastion_enabled" {
   type        = bool
   default     = false
@@ -280,4 +295,28 @@ variable "wi_gke-2_set" {
     k8s_sa_name         = ""
   }]
   description = "The set of objects with all variables that should be set for WI processing"
+}
+
+variable "lb_exposed_port" {
+  type        = number
+  default     = null
+  description = "The port should be exposed"
+}
+
+variable "lb_neg_name" {
+  type        = string
+  default     = ""
+  description = "lb_neg_name"
+}
+
+variable "k8s_enabled" {
+  type        = bool
+  default     = false
+  description = "k8s_enabled"
+}
+
+variable "lb_enabled" {
+  type        = bool
+  default     = false
+  description = "lb_enabled"
 }
