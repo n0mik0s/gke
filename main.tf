@@ -229,10 +229,10 @@ module "helm-gke-2" {
 }
 
 module "mcs" {
-  source  = "terraform-google-modules/gcloud/google"
+  source = "terraform-google-modules/gcloud/google"
   count  = var.mcs_enabled ? 1 : 0
 
-  platform              = "linux"
+  platform = "linux"
 
   create_cmd_entrypoint = "${path.module}/scripts/mcs_enable.sh"
   create_cmd_body       = "${var.gcp_project_id} ${var.cluster_gke-1_name} ${var.cluster_gke-1_location} ${var.cluster_gke-2_name} ${var.cluster_gke-2_location}"
