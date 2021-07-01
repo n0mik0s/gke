@@ -320,3 +320,9 @@ variable "lb_enabled" {
   default     = false
   description = "lb_enabled"
 }
+
+variable "mcs_enabled" {
+  type        = bool
+  default     = false
+  description = "mcs_enabled"
+}

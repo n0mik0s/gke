@@ -27,7 +27,7 @@ gcloud alpha container hub multi-cluster-services enable \
     --project PROJECT_ID
 
     https://cloud.google.com/anthos/multicluster-management/connect/prerequisites#gke-cross-project
-    It could be that for the next steps you would need to issue next commands:
+    It could happens that for the next steps you would need to issue next commands:
     GKE_PROJECT_ID=PROJECT_ID
     HUB_PROJECT_ID=PROJECT_ID
     HUB_PROJECT_NUMBER=$(gcloud projects describe "${HUB_PROJECT_ID}" --format "value(projectNumber)")

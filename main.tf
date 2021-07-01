@@ -227,3 +227,16 @@ module "helm-gke-2" {
   ping_devops_key_bd  = var.ping_devops_key_bd
   ping_devops_user_bd = var.ping_devops_user_bd
 }
+
+module "mcs" {
+  source  = "terraform-google-modules/gcloud/google"
+  count  = var.mcs_enabled ? 1 : 0
+
+  platform              = "linux"
+
+  create_cmd_entrypoint = "${path.module}/scripts/mcs_enable.sh"
+  create_cmd_body       = "${var.gcp_project_id} ${var.cluster_gke-1_name} ${var.cluster_gke-1_location} ${var.cluster_gke-2_name} ${var.cluster_gke-2_location}"
+
+  destroy_cmd_entrypoint = "${path.module}/scripts/mcs_disable.sh"
+  destroy_cmd_body       = "${var.gcp_project_id} ${var.cluster_gke-1_name} ${var.cluster_gke-1_location} ${var.cluster_gke-2_name} ${var.cluster_gke-2_location}"
+}
