@@ -17,6 +17,7 @@ module "gke-1" {
 
   gcp_project_id            = var.gcp_project_id
   cluster_location          = var.cluster_gke-1_location
+  cluster_node_locations    = var.cluster_gke-1_node_locations
   cluster_region            = var.cluster_gke-1_region
   cluster_name              = var.cluster_gke-1_name
   cluster_autoscaling       = var.cluster_autoscaling
@@ -47,6 +48,7 @@ module "gke-2" {
 
   gcp_project_id            = var.gcp_project_id
   cluster_location          = var.cluster_gke-2_location
+  cluster_node_locations    = var.cluster_gke-2_node_locations
   cluster_region            = var.cluster_gke-2_region
   cluster_name              = var.cluster_gke-2_name
   cluster_autoscaling       = var.cluster_autoscaling
@@ -190,6 +192,11 @@ module "lb" {
     module.gke-1.instance_group_urls,
     module.gke-2.instance_group_urls
   ])
+
+  zones = flatten([
+    var.cluster_gke-1_node_locations,
+    var.cluster_gke-2_node_locations
+  ])
 }
 
 module "helm-gke-1" {
@@ -208,6 +215,9 @@ module "helm-gke-1" {
   ping_devops_user    = var.ping_devops_user
   ping_devops_key_bd  = var.ping_devops_key_bd
   ping_devops_user_bd = var.ping_devops_user_bd
+
+  lb_exposed_port = var.lb_exposed_port
+  lb_neg_name     = var.lb_neg_name
 }
 
 module "helm-gke-2" {
@@ -226,6 +236,9 @@ module "helm-gke-2" {
   ping_devops_user    = var.ping_devops_user
   ping_devops_key_bd  = var.ping_devops_key_bd
   ping_devops_user_bd = var.ping_devops_user_bd
+
+  lb_exposed_port = var.lb_exposed_port
+  lb_neg_name     = var.lb_neg_name
 }
 
 module "mcs" {

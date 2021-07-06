@@ -39,3 +39,9 @@ variable "instance_group_urls" {
   default     = []
   description = "instance_group_urls"
 }
+
+variable "zones" {
+  type        = set(string)
+  default     = []
+  description = "zones"
+}

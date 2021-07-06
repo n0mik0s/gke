@@ -4,7 +4,7 @@ locals {
 }
 
 data "google_compute_network_endpoint_group" "pingdataconsole" {
-  for_each = local.zones
+  for_each = var.zones
 
   name    = var.lb_neg_name
   project = var.gcp_project_id

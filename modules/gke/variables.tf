@@ -136,3 +136,9 @@ variable "cluster_region" {
   default     = ""
   description = "cluster region"
 }
+
+variable "cluster_node_locations" {
+  type        = set(string)
+  default     = []
+  description = "cluster_node_locations"
+}

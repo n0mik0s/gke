@@ -46,9 +46,10 @@ resource "google_compute_subnetwork" "subnetwork" {
 resource "google_container_cluster" "cluster" {
   provider = google-beta
 
-  project  = var.gcp_project_id
-  name     = var.cluster_name
-  location = var.cluster_location
+  project        = var.gcp_project_id
+  name           = var.cluster_name
+  location       = var.cluster_location
+  node_locations = var.cluster_node_locations
 
   network    = var.network
   subnetwork = google_compute_subnetwork.subnetwork.id

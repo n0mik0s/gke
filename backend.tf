@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "telus-tf-state"
+    bucket = "telus-mr-gke"
     prefix = "state"
   }
 }

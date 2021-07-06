@@ -326,3 +326,15 @@ variable "mcs_enabled" {
   default     = false
   description = "mcs_enabled"
 }
+
+variable "cluster_gke-1_node_locations" {
+  type        = set(string)
+  default     = []
+  description = "cluster_gke-1_node_locations"
+}
+
+variable "cluster_gke-2_node_locations" {
+  type        = set(string)
+  default     = []
+  description = "cluster_gke-2_node_locations"
+}
