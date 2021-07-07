@@ -1,7 +1,0 @@
-export PING_IDENTITY_DEVOPS_USER=vitalii_kalinichenko@epam.com
-export PING_IDENTITY_ACCEPT_EULA=YES
-export PING_IDENTITY_DEVOPS_KEY=c3e011ae-e798-feac-110d-208720920839
-
-export TF_VAR_ping_devops_user=vitalii_kalinichenko@epam.com
-export TF_VAR_ping_devops_key_bd=YzNlMDExYWUtZTc5OC1mZWFjLTExMGQtMjA4NzIwOTIwODM5
-export TF_VAR_ping_devops_user_bd=dml0YWxpaV9rYWxpbmljaGVua29AZXBhbS5jb20=
