@@ -338,3 +338,21 @@ variable "cluster_gke-2_node_locations" {
   default     = []
   description = "cluster_gke-2_node_locations"
 }
+
+variable "lb_service_name" {
+  type        = string
+  default     = ""
+  description = "service_name"
+}
+
+variable "k8s_svc_instance" {
+  type        = string
+  default     = ""
+  description = "k8s_svc_instance"
+}
+
+variable "k8s_svc_enabled" {
+  type        = string
+  default     = ""
+  description = "k8s_svc_enabled"
+}

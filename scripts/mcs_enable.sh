@@ -6,12 +6,6 @@ GKE_1_zone=$3
 GKE_2_name=$4
 GKE_2_zone=$5
 
-gcloud services enable gkehub.googleapis.com --project $PROJECT_ID
-gcloud services enable trafficdirector.googleapis.com --project $PROJECT_ID
-gcloud services enable cloudresourcemanager.googleapis.com --project $PROJECT_ID
-gcloud services enable multiclusterservicediscovery.googleapis.com --project $PROJECT_ID
-gcloud alpha container hub multi-cluster-services enable --project $PROJECT_ID
-
 gcloud container hub memberships register $GKE_1_name \
    --gke-cluster $GKE_1_zone/$GKE_1_name \
    --enable-workload-identity

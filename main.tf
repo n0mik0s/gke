@@ -85,6 +85,15 @@ module "k8s-gke-1" {
   namespaces     = var.cluster_k8s_namespaces
   helm_namespace = var.helm_namespace
   cluster_name   = module.gke-1.cluster_name
+
+  lb_exposed_port = var.lb_exposed_port
+  lb_neg_name     = var.lb_neg_name
+  svc_instance    = var.k8s_svc_instance
+  svc_enabled     = var.k8s_svc_enabled
+
+  ping_devops_user    = var.ping_devops_user
+  ping_devops_key_bd  = var.ping_devops_key_bd
+  ping_devops_user_bd = var.ping_devops_user_bd
 }
 
 module "k8s-gke-2" {
@@ -98,6 +107,15 @@ module "k8s-gke-2" {
   namespaces     = var.cluster_k8s_namespaces
   helm_namespace = var.helm_namespace
   cluster_name   = module.gke-2.cluster_name
+
+  lb_exposed_port = var.lb_exposed_port
+  lb_neg_name     = var.lb_neg_name
+  svc_instance    = var.k8s_svc_instance
+  svc_enabled     = var.k8s_svc_enabled
+
+  ping_devops_user    = var.ping_devops_user
+  ping_devops_key_bd  = var.ping_devops_key_bd
+  ping_devops_user_bd = var.ping_devops_user_bd
 }
 
 module "wi_k8s-gke-1" {
@@ -186,17 +204,18 @@ module "lb" {
 
   lb_exposed_port = var.lb_exposed_port
   lb_neg_name     = var.lb_neg_name
+  service_name    = var.lb_service_name
   gcp_project_id  = var.gcp_project_id
-
-  instance_group_urls = flatten([
-    module.gke-1.instance_group_urls,
-    module.gke-2.instance_group_urls
-  ])
 
   zones = flatten([
     var.cluster_gke-1_node_locations,
     var.cluster_gke-2_node_locations
   ])
+
+  depends_on = [
+    module.k8s-gke-1,
+    module.k8s-gke-2
+  ]
 }
 
 module "helm-gke-1" {
@@ -212,12 +231,7 @@ module "helm-gke-1" {
   helm_namespace  = var.helm_namespace
   helm_repository = var.helm_repository
 
-  ping_devops_user    = var.ping_devops_user
-  ping_devops_key_bd  = var.ping_devops_key_bd
-  ping_devops_user_bd = var.ping_devops_user_bd
-
-  lb_exposed_port = var.lb_exposed_port
-  lb_neg_name     = var.lb_neg_name
+  depends_on = [module.k8s-gke-1]
 }
 
 module "helm-gke-2" {
@@ -233,12 +247,7 @@ module "helm-gke-2" {
   helm_namespace  = var.helm_namespace
   helm_repository = var.helm_repository
 
-  ping_devops_user    = var.ping_devops_user
-  ping_devops_key_bd  = var.ping_devops_key_bd
-  ping_devops_user_bd = var.ping_devops_user_bd
-
-  lb_exposed_port = var.lb_exposed_port
-  lb_neg_name     = var.lb_neg_name
+  depends_on = [module.k8s-gke-2]
 }
 
 module "mcs" {
@@ -248,8 +257,8 @@ module "mcs" {
   platform = "linux"
 
   create_cmd_entrypoint = "${path.module}/scripts/mcs_enable.sh"
-  create_cmd_body       = "${var.gcp_project_id} ${var.cluster_gke-1_name} ${var.cluster_gke-1_location} ${var.cluster_gke-2_name} ${var.cluster_gke-2_location}"
+  create_cmd_body       = "${var.gcp_project_id} ${module.gke-1.cluster_name} ${var.cluster_gke-1_location} ${module.gke-2.cluster_name} ${var.cluster_gke-2_location}"
 
   destroy_cmd_entrypoint = "${path.module}/scripts/mcs_disable.sh"
-  destroy_cmd_body       = "${var.gcp_project_id} ${var.cluster_gke-1_name} ${var.cluster_gke-1_location} ${var.cluster_gke-2_name} ${var.cluster_gke-2_location}"
+  destroy_cmd_body       = "${module.gke-1.cluster_name} ${var.cluster_gke-1_location} ${module.gke-2.cluster_name} ${var.cluster_gke-2_location}"
 }

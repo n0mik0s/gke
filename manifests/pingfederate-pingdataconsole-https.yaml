@@ -4,7 +4,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: pingfederate
     meta.helm.sh/release-namespace: test
-    cloud.google.com/neg: '{"exposed_ports": {"443":{"name": "pingfederate-pingdataconsole-https-neg"}}}'
+    cloud.google.com/neg: '{"exposed_ports": {"443":{"name": "pingdataconsole-https-neg"}}}'
   labels:
     app.kubernetes.io/instance: pingfederate
     app.kubernetes.io/managed-by: Helm

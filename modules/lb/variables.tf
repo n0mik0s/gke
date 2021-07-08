@@ -28,16 +28,16 @@ variable "cluster_gke-2_name" {
   description = "cluster_gke-2_name"
 }
 
-variable "network" {
-  type        = string
-  default     = ""
-  description = "network"
+variable "network_endpoint_group" {
+  type        = set(string)
+  default     = []
+  description = "network_endpoint_group"
 }
 
-variable "instance_group_urls" {
-  type        = set(any)
-  default     = []
-  description = "instance_group_urls"
+variable "service_name" {
+  type        = string
+  default     = ""
+  description = "service_name"
 }
 
 variable "zones" {
