@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: pingfederate
+    meta.helm.sh/release-namespace: test
+    cloud.google.com/neg: '{"exposed_ports": {"443":{"name": "pingdataconsole-https-neg"}}}'
+  labels:
+    app.kubernetes.io/instance: pingfederate
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: pingdataconsole
+    helm.sh/chart: ping-devops-0.6.3
+  name: pingfederate-pingdataconsole-https
+  namespace: test
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app.kubernetes.io/instance: pingfederate
+    app.kubernetes.io/name: pingdataconsole
+  sessionAffinity: None
+  type: ClusterIP

@@ -1,14 +1,35 @@
 provider "google" {}
 
+provider "google-beta" {}
+
 provider "kubernetes" {
-  host = "https://${module.gke_cluster_1.endpoint}"
-  cluster_ca_certificate = base64decode(module.gke_cluster_1.cluster_ca_certificate)
-  token = data.google_client_config.default.access_token
+  alias                  = "gke-1"
+  host                   = "https://${module.gke-1.endpoint}"
+  cluster_ca_certificate = base64decode(module.gke-1.cluster_ca_certificate)
+  token                  = data.google_client_config.default.access_token
 }
 
 provider "kubernetes" {
-  alias = "cluster_2"
-  host = "https://${module.gke_cluster_2.endpoint}"
-  cluster_ca_certificate = base64decode(module.gke_cluster_2.cluster_ca_certificate)
-  token = data.google_client_config.default.access_token
+  alias                  = "gke-2"
+  host                   = "https://${module.gke-2.endpoint}"
+  cluster_ca_certificate = base64decode(module.gke-2.cluster_ca_certificate)
+  token                  = data.google_client_config.default.access_token
+}
+
+provider "helm" {
+  alias = "gke-1"
+  kubernetes {
+    host                   = "https://${module.gke-1.endpoint}"
+    cluster_ca_certificate = base64decode(module.gke-1.cluster_ca_certificate)
+    token                  = data.google_client_config.default.access_token
+  }
+}
+
+provider "helm" {
+  alias = "gke-2"
+  kubernetes {
+    host                   = "https://${module.gke-2.endpoint}"
+    cluster_ca_certificate = base64decode(module.gke-2.cluster_ca_certificate)
+    token                  = data.google_client_config.default.access_token
+  }
 }
