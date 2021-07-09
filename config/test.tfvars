@@ -133,6 +133,8 @@ lb_service_name = "pingdataconsole"
 k8s_enabled      = true
 k8s_svc_instance = "pf"
 k8s_svc_enabled  = true
+k8s_gke-1_svc_namespaces = ["gke-1"]
+k8s_gke-2_svc_namespaces = ["gke-2"]
 #--------------------------------------------------------------
 # MCS
 #--------------------------------------------------------------

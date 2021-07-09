@@ -42,7 +42,7 @@ resource "kubernetes_secret" "devops-secret" {
 }
 
 resource "kubernetes_service" "kubernetes_service" {
-  for_each = toset([for i in var.namespaces : i if var.svc_enabled])
+  for_each = toset([for i in var.svc_namespaces : i if var.svc_enabled])
 
   lifecycle {
     ignore_changes = [
