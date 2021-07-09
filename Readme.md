@@ -51,11 +51,11 @@
 
 9. Export all sensitive env variables:
    
-   `export TF_VAR_ping_devops_user=...'
+   `export TF_VAR_ping_devops_user=...`
    
-   'export TF_VAR_ping_devops_key_bd=ENCRYPTED_KEY'
+   `export TF_VAR_ping_devops_key_bd=ENCRYPTED_KEY`
    
-   'export TF_VAR_ping_devops_user_bd=ENCRYPTED_USER`
+   `export TF_VAR_ping_devops_user_bd=ENCRYPTED_USER`
 
 10. Do terraform plan to test your terraform code:
     
