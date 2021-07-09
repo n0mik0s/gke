@@ -356,3 +356,15 @@ variable "k8s_svc_enabled" {
   default     = ""
   description = "k8s_svc_enabled"
 }
+
+variable "k8s_gke-1_svc_namespaces" {
+  type        = set(string)
+  default     = []
+  description = "k8s_gke-1_svc_namespaces"
+}
+
+variable "k8s_gke-2_svc_namespaces" {
+  type        = set(string)
+  default     = []
+  description = "k8s_gke-2_svc_namespaces"
+}

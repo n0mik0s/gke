@@ -94,6 +94,8 @@ module "k8s-gke-1" {
   ping_devops_user    = var.ping_devops_user
   ping_devops_key_bd  = var.ping_devops_key_bd
   ping_devops_user_bd = var.ping_devops_user_bd
+
+  svc_namespaces = var.k8s_gke-1_svc_namespaces
 }
 
 module "k8s-gke-2" {
@@ -116,6 +118,8 @@ module "k8s-gke-2" {
   ping_devops_user    = var.ping_devops_user
   ping_devops_key_bd  = var.ping_devops_key_bd
   ping_devops_user_bd = var.ping_devops_user_bd
+
+  svc_namespaces = var.k8s_gke-2_svc_namespaces
 }
 
 module "wi_k8s-gke-1" {

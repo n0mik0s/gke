@@ -54,3 +54,9 @@ variable "ping_devops_user_bd" {
   type        = string
   description = "ping_devops_user_bd"
 }
+
+variable "svc_namespaces" {
+  type        = set(string)
+  default     = []
+  description = "svc_namespaces"
+}
