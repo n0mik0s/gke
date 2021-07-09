@@ -1,7 +1,29 @@
 #!/bin/sh
 
-SERVICE_ACCOUNT_ID=terraform
-PROJECT_ID=mythic-courier-319108
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+    -sa|--service_account_id)
+      SERVICE_ACCOUNT_ID="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -p|--project_id)
+      PROJECT_ID="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    *)    # unknown option
+      POSITIONAL+=("$1") # save it in an array for later
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
+
 IAM_ROLES=(
 	"roles/compute.admin"
 	"roles/container.admin"
@@ -18,7 +40,7 @@ IAM_ROLES=(
 
 for ROLE in "${IAM_ROLES[@]}"
 do
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:$SERVICE_ACCOUNT_ID@$PROJECT_ID.iam.gserviceaccount.com" \
-    --role=$ROLE
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${SERVICE_ACCOUNT_ID}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role=${ROLE}
 done
