@@ -41,6 +41,8 @@
      }
    }`
    
+    Edit your tfvars file by changing the gcp_project_id variable
+   
 6. Issue `terraform init` command to initialize terraform.
 
 7. Create new workspace for terraform:
@@ -66,13 +68,16 @@
    `terraform apply -var-file=./config/YOUR_TFVARS_FILE`
     
 12. To destroy your GCP infrastructure:
+    
    `terraform destroy -var-file=./config/YOUR_TFVARS_FILE`
-    *Firstly you need to delete all namespaces terraform resources from
+    
+    *But firstly you need to delete all namespaces terraform resources from
     the terraform state. For example:
     
     `terraform state rm \
     module.k8s-gke-1[0].kubernetes_namespace.k8s_namespace[\"gke-1\"] \
     module.k8s-gke-1[0].kubernetes_namespace.k8s_namespace[\"gke-2\"]`
+    
     `terraform state rm \
     module.k8s-gke-2[0].kubernetes_namespace.k8s_namespace[\"gke-1\"] \
     module.k8s-gke-2[0].kubernetes_namespace.k8s_namespace[\"gke-2\"]`
