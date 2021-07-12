@@ -1,7 +1,7 @@
 #--------------------------------------------------------------
 # General
 #--------------------------------------------------------------
-gcp_project_id             = ""
+gcp_project_id             = "mythic-courier-319108"
 ping_devops_user_plain     = ""
 ping_devops_key_encrypted  = ""
 ping_devops_user_encrypted = ""
