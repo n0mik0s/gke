@@ -95,7 +95,3 @@ lb_service_name = "pingdataconsole"
 k8s_enabled      = true
 k8s_svc_instance = "pingfederate"
 k8s_svc_enabled  = true
-#--------------------------------------------------------------
-# MCS
-#--------------------------------------------------------------
-mcs_enabled = false

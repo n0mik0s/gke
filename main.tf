@@ -122,16 +122,3 @@ module "helm" {
 
   depends_on = [module.k8s]
 }
-
-module "mcs" {
-  source = "terraform-google-modules/gcloud/google"
-  count  = var.mcs_enabled ? 1 : 0
-
-  platform = "linux"
-
-  create_cmd_entrypoint = "${path.module}/scripts/mcs_enable.sh"
-  create_cmd_body       = "${var.gcp_project_id} ${module.gke.cluster_name} ${var.cluster_location} ${module.gke.cluster_name} ${var.cluster_location}"
-
-  destroy_cmd_entrypoint = "${path.module}/scripts/mcs_disable.sh"
-  destroy_cmd_body       = "${module.gke.cluster_name} ${var.cluster_location} ${module.gke.cluster_name} ${var.cluster_location}"
-}

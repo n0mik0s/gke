@@ -1,4 +1,4 @@
-**How-to for infrastructure deployment: Multi-regional cluster**
+**How-to for infrastructure deployment: Single-regional cluster**
 
 0. You need to be authorized in GCP to deploy the infrastructure.
    All **preconfiguration steps** could be done with GCP account with owner role
@@ -17,7 +17,7 @@
    https://cloud.google.com/iam/docs/creating-managing-service-account-keys
 
 2. Pull the repo from github:
-   https://github.com/n0mik0s/gke/tree/mr-gke
+   https://github.com/n0mik0s/gke/tree/sr-gke
    cd to the repo dir.
    
    *All steps to be done assumed that you are in the repo root dir.
@@ -53,11 +53,11 @@
 
 9. Export all sensitive env variables:
    
-   `export TF_VAR_ping_devops_user=...`
+   `export TF_VAR_ping_devops_user_plain=...`
    
-   `export TF_VAR_ping_devops_key_bd=ENCRYPTED_KEY`
+   `export TF_VAR_ping_devops_key_encrypted=ENCRYPTED_KEY`
    
-   `export TF_VAR_ping_devops_user_bd=ENCRYPTED_USER`
+   `export TF_VAR_ping_devops_user_encrypted=ENCRYPTED_USER`
 
 10. Do terraform plan to test your terraform code:
     

@@ -245,12 +245,6 @@ variable "lb_enabled" {
   description = "lb_enabled"
 }
 
-variable "mcs_enabled" {
-  type        = bool
-  default     = false
-  description = "mcs_enabled"
-}
-
 variable "lb_service_name" {
   type        = string
   default     = ""
