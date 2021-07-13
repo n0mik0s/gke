@@ -4,40 +4,28 @@ variable "gcp_project_id" {
   description = "gcp project id"
 }
 
-variable "gcp_regions" {
-  type        = set(string)
-  default     = []
-  description = "Set of gcp regions for network module (Cloud Router and Cloud Nat configuration)"
-}
-
-variable "cluster_gke-1_region" {
+variable "cluster_region" {
   type        = string
   default     = ""
-  description = "cluster_gke-1_region"
-}
-
-variable "cluster_gke-2_region" {
-  type        = string
-  default     = ""
-  description = "cluster_gke-2_region"
+  description = "cluster region"
 }
 
 variable "network_name" {
   type        = string
   default     = ""
-  description = "network_name"
+  description = "network name"
 }
 
-variable "cluster_gke-1_location" {
+variable "cluster_location" {
   type        = string
   default     = ""
-  description = "cluster_gke-1_location"
+  description = "cluster location"
 }
 
-variable "cluster_gke-2_location" {
-  type        = string
-  default     = ""
-  description = "cluster_gke-2_location"
+variable "cluster_node_locations" {
+  type        = set(string)
+  default     = []
+  description = "cluster_node_locations"
 }
 
 variable "ping_devops_user_plain" {
@@ -58,64 +46,34 @@ variable "ping_devops_user_encrypted" {
   description = "ping_devops_user_encrypted"
 }
 
-variable "network_gke-1_primary_ip_cidr_range" {
+variable "network_primary_ip_cidr_range" {
   type        = string
   default     = ""
-  description = "network_gke-1_primary_ip_cidr_range"
+  description = "network_primary_ip_cidr_range"
 }
 
-variable "network_gke-1_master_ipv4_cidr_block" {
+variable "network_master_ipv4_cidr_block" {
   type        = string
   default     = ""
-  description = "network_gke-1_master_ipv4_cidr_block"
+  description = "network_master_ipv4_cidr_block"
 }
 
-variable "network_gke-1_secondary_ip_range_svc" {
+variable "network_secondary_ip_range_svc" {
   type        = string
   default     = ""
-  description = "network_gke-1_secondary_ip_range_svc"
+  description = "network_secondary_ip_range_svc"
 }
 
-variable "network_gke-1_secondary_ip_range_pods" {
+variable "network_secondary_ip_range_pods" {
   type        = string
   default     = ""
-  description = "network_gke-1_secondary_ip_range_pods"
+  description = "network_secondary_ip_range_pods"
 }
 
-variable "network_gke-2_primary_ip_cidr_range" {
-  type        = string
-  default     = ""
-  description = "network_gke-2_primary_ip_cidr_range"
-}
-
-variable "network_gke-2_master_ipv4_cidr_block" {
-  type        = string
-  default     = ""
-  description = "network_gke-2_master_ipv4_cidr_block"
-}
-
-variable "network_gke-2_secondary_ip_range_svc" {
-  type        = string
-  default     = ""
-  description = "network_gke-2_secondary_ip_range_svc"
-}
-
-variable "network_gke-2_secondary_ip_range_pods" {
-  type        = string
-  default     = ""
-  description = "network_gke-2_secondary_ip_range_pods"
-}
-
-variable "cluster_gke-1_name" {
+variable "cluster_name" {
   type        = string
   default     = ""
   description = "cluster_gke-1_name"
-}
-
-variable "cluster_gke-2_name" {
-  type        = string
-  default     = ""
-  description = "cluster_gke-2_name"
 }
 
 variable "cluster_autoscaling" {
@@ -232,37 +190,16 @@ variable "helm_namespace" {
   description = "helm_namespace"
 }
 
-variable "ping_devops_user" {
-  type        = string
-  description = "ping_devops_user"
-}
-
-variable "ping_devops_key_bd" {
-  type        = string
-  description = "ping_devops_key_bd"
-}
-
-variable "ping_devops_user_bd" {
-  type        = string
-  description = "ping_devops_user_bd"
-}
-
 variable "bastion_enabled" {
   type        = bool
   default     = false
   description = "bastion_enabled"
 }
 
-variable "bastion_gke-1_ip_cidr_range" {
+variable "bastion_ip_cidr_range" {
   type        = string
   default     = ""
   description = "description"
-}
-
-variable "bastion_gke-2_ip_cidr_range" {
-  type        = string
-  default     = ""
-  description = "bastion_gke-2_ip_cidr_range"
 }
 
 variable "bastion_machine_type" {
@@ -271,20 +208,7 @@ variable "bastion_machine_type" {
   description = "bastion_machine_type"
 }
 
-variable "wi_gke-1_set" {
-  type = set(map(string))
-  default = [{
-    name                = ""
-    namespace           = ""
-    roles               = ""
-    use_existing_k8s_sa = "false"
-    annotate_k8s_sa     = "false"
-    k8s_sa_name         = ""
-  }]
-  description = "The set of objects with all variables that should be set for WI processing"
-}
-
-variable "wi_gke-2_set" {
+variable "wi_set" {
   type = set(map(string))
   default = [{
     name                = ""
@@ -327,18 +251,6 @@ variable "mcs_enabled" {
   description = "mcs_enabled"
 }
 
-variable "cluster_gke-1_node_locations" {
-  type        = set(string)
-  default     = []
-  description = "cluster_gke-1_node_locations"
-}
-
-variable "cluster_gke-2_node_locations" {
-  type        = set(string)
-  default     = []
-  description = "cluster_gke-2_node_locations"
-}
-
 variable "lb_service_name" {
   type        = string
   default     = ""
@@ -355,16 +267,4 @@ variable "k8s_svc_enabled" {
   type        = string
   default     = ""
   description = "k8s_svc_enabled"
-}
-
-variable "k8s_gke-1_svc_namespaces" {
-  type        = set(string)
-  default     = []
-  description = "k8s_gke-1_svc_namespaces"
-}
-
-variable "k8s_gke-2_svc_namespaces" {
-  type        = set(string)
-  default     = []
-  description = "k8s_gke-2_svc_namespaces"
 }

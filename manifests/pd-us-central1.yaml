@@ -29,20 +29,6 @@ metadata:
   labels:
     role: pingdirectory
   name: sandbox-pd-environment-variables
-#---
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: devops-secret
-#  namespace: us-central1
-#  annotations:
-#    ping-devops.user: vitalii_kalinichenko@epam.com
-#    ping-devops.app-version: v0.7.3
-#type: Opaque
-#data:
-#  PING_IDENTITY_DEVOPS_USER: dml0YWxpaV9rYWxpbmljaGVua29AZXBhbS5jb20=
-#  PING_IDENTITY_DEVOPS_KEY: YzNlMDExYWUtZTc5OC1mZWFjLTExMGQtMjA4NzIwOTIwODM5
-#  PING_IDENTITY_ACCEPT_EULA: WUVT
 ---
 apiVersion: v1
 kind: Service

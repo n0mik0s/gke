@@ -4,9 +4,9 @@ variable "gcp_project_id" {
   description = "gcp project id"
 }
 
-variable "gcp_regions" {
-  type        = set(string)
-  default     = []
+variable "gcp_region" {
+  type        = string
+  default     = ""
   description = "Set of gcp regions for network module (Cloud Router and Cloud Nat configuration)"
 }
 
