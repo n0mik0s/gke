@@ -133,6 +133,8 @@ module "wi_k8s-gke-1" {
   project_id   = var.gcp_project_id
   cluster_name = module.gke-1.cluster_name
   location     = module.gke-1.cluster_location
+
+  depends_on = [module.k8s-gke-1]
 }
 
 module "wi_gsa-gke-1" {
@@ -144,6 +146,8 @@ module "wi_gsa-gke-1" {
   roles          = split(",", each.value.roles)
   k8s_given_name = each.value.k8s_sa_name != null ? each.value.k8s_sa_name : each.value.name
   project_id     = var.gcp_project_id
+
+  depends_on = [module.k8s-gke-1]
 }
 
 module "wi_k8s-gke-2" {
@@ -157,6 +161,8 @@ module "wi_k8s-gke-2" {
   project_id   = var.gcp_project_id
   cluster_name = module.gke-2.cluster_name
   location     = module.gke-2.cluster_location
+
+  depends_on = [module.k8s-gke-2]
 }
 
 module "wi_gsa-gke-2" {
@@ -168,6 +174,8 @@ module "wi_gsa-gke-2" {
   roles          = split(",", each.value.roles)
   k8s_given_name = each.value.k8s_sa_name != null ? each.value.k8s_sa_name : each.value.name
   project_id     = var.gcp_project_id
+
+  depends_on = [module.k8s-gke-2]
 }
 
 module "bastion-1" {

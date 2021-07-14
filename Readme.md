@@ -50,6 +50,7 @@
    `terraform workspace new WS_NAME`
    
 8. Create ssl key and cert files and put them under certs dir in the gke root dir
+    and change appropriate lines in the main.tf file under the lb module
 
 9. Export all sensitive env variables:
    

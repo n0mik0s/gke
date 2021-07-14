@@ -1,6 +1,19 @@
 /*
-This module intended to create GKE cluster with non-default node pool.
-In addition new namespaces could be created in the newly created cluster.
+  This module intended to create regional GKE cluster with:
+  - non-default node pool
+  - workload identity
+  - autoscaling
+  https://cloud.google.com/kubernetes-engine
+  https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools
+  https://cloud.google.com/blog/products/containers-kubernetes/introducing-workload-identity-better-authentication-for-your-gke-applications
+  https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler
+  https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler
+
+  In addition to it this module will create:
+  - GCP IAM service account for GKE cluster
+  - subnetwork with custom CIDRs for pods and services
+  The concept of GCP IAM SA could be found here:
+  https://cloud.google.com/iam/docs/service-accounts
 */
 locals {
   gke_nodes_sa = "${var.cluster_name}-nodes-sa"
@@ -155,6 +168,7 @@ resource "google_container_node_pool" "cluster_node_pool" {
     }
 
     service_account = google_service_account.gke_nodes_sa.email
+    # The set of Google API scopes to be made available on all of the node VMs under the provided service account.
     oauth_scopes = [
       "https://www.googleapis.com/auth/devstorage.full_control",
       "https://www.googleapis.com/auth/cloud-platform",
