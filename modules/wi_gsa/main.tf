@@ -1,3 +1,8 @@
+/*
+  This module creates all needed resource to configure GKE workload identity.
+  Exactly this module will do all needed from the GCP IAM side.
+*/
+
 locals {
   k8s_sa_gcp_derived_name = "serviceAccount:${var.project_id}.svc.id.goog[${var.namespace}/${var.name}]"
   gcp_sa_email            = google_service_account.cluster_service_account.email

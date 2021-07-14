@@ -1,6 +1,23 @@
+/*
+  This module intended for creation so called bastion host.
+  Bastion host should be used for accessing and managing the
+  GKE clusters that would be created via gke module.
+  The basic concept of bastion hosts could be found here:
+  https://en.wikipedia.org/wiki/Bastion_host
+  The basic how-to could be found here:
+  https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/examples/safer_cluster_iap_bastion
+  here:
+  https://medium.com/google-cloud/gke-private-cluster-with-a-bastion-host-5480b44793a7
+  and here:
+  https://cloud.google.com/solutions/connecting-securely#bastion
+*/
+
 locals {
+  # The GCP IAM service account name that would be used for the bastion host:
   bastion_sa            = "${var.cluster_name}-bastion-sa"
+  # The subnetwork name for the bastion host:
   subnetwork_name       = "${var.cluster_name}-bastion-subnet"
+  # The VM name:
   compute_instance_name = "${var.cluster_name}-bastion-host"
 }
 
@@ -52,6 +69,7 @@ resource "google_compute_instance" "bastion" {
     subnetwork = google_compute_subnetwork.subnetwork.self_link
   }
 
+  # Next script should configure the bastion host: install all apps, do all configs etc
   metadata_startup_script = file("./scripts/bastion_startup_script.sh")
 
   service_account {

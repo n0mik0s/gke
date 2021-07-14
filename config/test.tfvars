@@ -73,7 +73,7 @@ cluster_istio_config              = true
 # https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept#endpoints_in_private_clusters
 cluster_master_authorized_network = "0.0.0.0/0"
 
-# Minimum and maximum amount of the resource in the cluster.
+# Minimum and maximum amount of the resources in the cluster.
 # https://cloud.google.com/compute/docs/nodes/autoscaling-node-groups
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#resource_type
 cluster_initial_node_count = 1

@@ -1,3 +1,7 @@
+/*
+  This module is intended to install Ping Identity components via helm charts
+*/
+
 resource "helm_release" "pingfederate" {
   name             = "pingfederate"
   repository       = var.helm_repository
@@ -8,6 +12,7 @@ resource "helm_release" "pingfederate" {
   timeout = 600
 
   values = [
+    # The file with all values that should override the default values for the chart:
     "${file("manifests/pingfederate.yaml")}"
   ]
 }

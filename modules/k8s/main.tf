@@ -1,4 +1,20 @@
+/*
+  This module intended to create all K8s objects that MUST be created via the terraform.
+  1. Namespaces should be created before the Workload Identity module to be able to annotate
+  K8s service accounts.
+  2. Devops secret COULD be created just for simplify the Ping Identity deployments. It's
+  optional component.
+  3. K8s service MUST be created beforehand the Load Balancer because the NEGs that should be
+  used for LB backend service creation MUST be already exist to be able to be added to the
+  appropriate terraform data structure.
+*/
+
 locals {
+  # Variable that would be used for K8s service creation.
+  # Take a look on these references to clarify the concept:
+  # https://cloud.google.com/load-balancing/docs/negs
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/standalone-neg#standalone_negs
+  # https://medium.com/google-cloud/container-load-balancing-on-google-kubernetes-engine-gke-4cbfaa80a6f6
   annotation = "{\"exposed_ports\": {\"${var.lb_exposed_port}\": {\"name\": \"${var.lb_neg_name}\"}}}"
 }
 
