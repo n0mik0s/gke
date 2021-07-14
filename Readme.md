@@ -43,16 +43,22 @@
    
     Edit your tfvars file by changing the gcp_project_id variable
    
-6. Issue `terraform init` command to initialize terraform.
+6. Enable the GCP API's that will be used during the deployment:
+    `bash ./scripts/general_apis_to_be_enabled.sh`
+   Next API's MUST be enabled too in case you would enable the MCS
+   in your GKE cluster:
+   `bash ./scripts/mcs_apis_to_be_enabled.sh`
 
-7. Create new workspace for terraform:
+7. Issue `terraform init` command to initialize terraform.
+
+8. Create new workspace for terraform:
    
    `terraform workspace new WS_NAME`
    
-8. Create ssl key and cert files and put them under certs dir in the gke root dir
+9. Create ssl key and cert files and put them under certs dir in the gke root dir
     and change appropriate lines in the main.tf file under the lb module
 
-9. Export all sensitive env variables:
+10. Export all sensitive env variables:
    
    `export TF_VAR_ping_devops_user=...`
    
@@ -60,15 +66,15 @@
    
    `export TF_VAR_ping_devops_user_bd=ENCRYPTED_USER`
 
-10. Do terraform plan to test your terraform code:
+11. Do terraform plan to test your terraform code:
     
    `terraform plan -var-file=./config/YOUR_TFVARS_FILE`
     
-11. Do terraform apply to apply your GCP infrastructure:
+12. Do terraform apply to apply your GCP infrastructure:
     
    `terraform apply -var-file=./config/YOUR_TFVARS_FILE`
     
-12. To destroy your GCP infrastructure:
+13. To destroy your GCP infrastructure:
     
    `terraform destroy -var-file=./config/YOUR_TFVARS_FILE`
     
