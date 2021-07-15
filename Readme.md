@@ -55,8 +55,8 @@
    
    `terraform workspace new WS_NAME`
    
-9. Create ssl key and cert files and put them under certs dir in the gke root dir
-    and change appropriate lines in the main.tf file under the lb module
+9. Create ssl key and cert files. Put them under certs dir in the gke root dir.
+    Change appropriate lines in the main.tf file under the lb module.
 
 10. Export all sensitive env variables:
    
@@ -91,4 +91,4 @@
     
    Then you MUST delete all resources that were not provisioned via
    your terraform code but set as dependencies for all resources
-   in your terraform state
+   in your terraform state.
