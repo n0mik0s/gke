@@ -1,0 +1,32 @@
+https://github.com/GoogleCloudPlatform/istio-samples/tree/master/istio-canary-gke
+
+cd Documents/telus/infra/
+terraform apply -var-file=./config/test-canary.tfvars
+gcloud container clusters get-credentials gke --region northamerica-northeast1 --project telus-test-01
+kubectl config rename-context gke_telus-test-01_northamerica-northeast1_gke gke
+
+cd ..
+git clone https://github.com/GoogleCloudPlatform/istio-samples.git
+cd istio-samples/common/
+./install_istio.sh
+
+kubectl label namespace gke istio-injection=enabled
+kubectl label namespace gke istio-discovery=enabled
+
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/kubernetes-manifests.yaml -n gke
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/master/release/istio-manifests.yaml -n gke
+kubectl delete serviceentry allow-egress-google-metadata -n gke
+kubectl delete serviceentry allow-egress-googleapis -n gke
+kubectl patch deployments/productcatalogservice -p '{"spec":{"template":{"metadata":{"labels":{"version":"v1"}}}}}' -n gke
+
+kubectl get svc -n istio-system istio-ingressgateway
+
+cd ../istio-canary-gke/
+kubectl apply -f canary/destinationrule.yaml -n gke
+kubectl apply -f canary/productcatalog-v2.yaml -n gke
+kubectl apply -f canary/vs-split-traffic.yaml -n gke
+
+kubectl port-forward svc/kiali 20001:20001 -n istio-system
+
+kubectl apply -f canary/rollback.yaml
+kubectl delete -f canary/productcatalog-v2.yaml

@@ -4,7 +4,7 @@ module "network" {
   source = "./modules/network"
 
   gcp_project_id = var.gcp_project_id
-  gcp_region = var.cluster_region
+  gcp_region     = var.cluster_region
 
   network_name = var.network_name
 }
@@ -53,7 +53,7 @@ module "k8s" {
   svc_instance    = var.k8s_svc_instance
   svc_enabled     = var.k8s_svc_enabled
 
-  ping_devops_user_plain    = var.ping_devops_user_plain
+  ping_devops_user_plain     = var.ping_devops_user_plain
   ping_devops_key_encrypted  = var.ping_devops_key_encrypted
   ping_devops_user_encrypted = var.ping_devops_user_encrypted
 
