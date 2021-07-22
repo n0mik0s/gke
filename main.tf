@@ -88,10 +88,11 @@ module "k8s-gke-1" {
 
   lb_exposed_port = var.lb_exposed_port
   lb_neg_name     = var.lb_neg_name
+  lb_service_name = var.lb_service_name
   svc_instance    = var.k8s_svc_instance
   svc_enabled     = var.k8s_svc_enabled
 
-  ping_devops_user_plain    = var.ping_devops_user_plain
+  ping_devops_user_plain     = var.ping_devops_user_plain
   ping_devops_key_encrypted  = var.ping_devops_key_encrypted
   ping_devops_user_encrypted = var.ping_devops_user_encrypted
 
@@ -112,10 +113,11 @@ module "k8s-gke-2" {
 
   lb_exposed_port = var.lb_exposed_port
   lb_neg_name     = var.lb_neg_name
+  lb_service_name = var.lb_service_name
   svc_instance    = var.k8s_svc_instance
   svc_enabled     = var.k8s_svc_enabled
 
-  ping_devops_user_plain    = var.ping_devops_user_plain
+  ping_devops_user_plain     = var.ping_devops_user_plain
   ping_devops_key_encrypted  = var.ping_devops_key_encrypted
   ping_devops_user_encrypted = var.ping_devops_user_encrypted
 
@@ -218,6 +220,9 @@ module "lb" {
   lb_neg_name     = var.lb_neg_name
   service_name    = var.lb_service_name
   gcp_project_id  = var.gcp_project_id
+
+  private_key = var.private_key
+  certificate = var.certificate
 
   zones = flatten([
     var.cluster_gke-1_node_locations,
