@@ -2,6 +2,12 @@ locals {
   annotation = "{\"exposed_ports\": {\"${var.lb_exposed_port}\": {\"name\": \"${var.lb_neg_name}\"}}}"
 }
 
+resource "time_sleep" "wait" {
+  # We need to wait up to 10 minutes that all NEGs that were created in k8s module could be
+  # available for adding them to the backend service
+  create_duration = "3m"
+}
+
 resource "kubernetes_namespace" "k8s_namespace" {
   for_each = var.namespaces
 
@@ -16,6 +22,8 @@ resource "kubernetes_namespace" "k8s_namespace" {
 
     name = each.value
   }
+
+  depends_on = [time_sleep.wait]
 }
 
 resource "kubernetes_secret" "devops-secret" {
